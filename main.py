@@ -9,7 +9,7 @@ from config import Config
 from markup import Markup
 from repository import Database
 
-
+HEROKU_URL = 'https://lit-ocean-76185-6a2ae209f7c8.herokuapp.com/'
 def main():
     load_dotenv()
     config = Config(
@@ -39,7 +39,7 @@ def main():
     @server.route("/")
     def webhook():
         app.bot.remove_webhook()
-        app.bot.set_webhook(url='https://partnerbot-f4a9cfd8065c.herokuapp.com/' + os.getenv('BOT_TOKEN'))
+        app.bot.set_webhook(url=HEROKU_URL + os.getenv('BOT_TOKEN'))
         return "!", 200
 
 
