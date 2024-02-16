@@ -10,6 +10,8 @@ from markup import Markup
 from repository import Database
 
 HEROKU_URL = 'https://lit-ocean-76185-6a2ae209f7c8.herokuapp.com/'
+
+
 def main():
     load_dotenv()
     config = Config(
@@ -41,7 +43,6 @@ def main():
         app.bot.remove_webhook()
         app.bot.set_webhook(url=HEROKU_URL + os.getenv('BOT_TOKEN'))
         return "!", 200
-
 
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
