@@ -39,7 +39,7 @@ def main():
     app.bot.remove_webhook()
     app.bot.set_webhook(url='https://partnerbot.herokuapp.com/'+os.getenv('BOT_TOKEN'))
 
-    flaskApp.run(host="0.0.0.0", port=5000)
+    flaskApp.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
 
 if __name__ == '__main__':
