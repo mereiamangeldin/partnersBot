@@ -2,6 +2,7 @@ import os
 
 import telebot
 from dotenv import load_dotenv
+from flask import Flask, request
 
 from bot import Bot
 from config import Config
@@ -28,6 +29,17 @@ def main():
     markup = Markup(config=config, database=database)
     app = Bot(config=config, database=database, bot=telebot.TeleBot(os.getenv('BOT_TOKEN')), markup=markup)
     app.bot.infinity_polling()
+    flaskApp = Flask(__name__)
+
+    @flaskApp.route('/' + os.getenv('BOT_TOKEN'), methods=['POST'])
+    def getMessage():
+        app.bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+        return "!", 200
+
+    app.bot.remove_webhook()
+    app.bot.set_webhook(url='https://partnerbot.herokuapp.com/'+os.getenv('BOT_TOKEN'))
+
+    flaskApp.run(host="0.0.0.0", port=5000)
 
 
 if __name__ == '__main__':
