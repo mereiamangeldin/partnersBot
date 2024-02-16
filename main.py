@@ -29,17 +29,21 @@ def main():
     markup = Markup(config=config, database=database)
     app = Bot(config=config, database=database, bot=telebot.TeleBot(os.getenv('BOT_TOKEN')), markup=markup)
     app.bot.infinity_polling()
-    flaskApp = Flask(__name__)
+    server = Flask(__name__)
 
-    @flaskApp.route('/' + os.getenv('BOT_TOKEN'), methods=['POST'])
+    @server.route('/' + os.getenv('BOT_TOKEN'), methods=['POST'])
     def getMessage():
         app.bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
         return "!", 200
 
-    app.bot.remove_webhook()
-    app.bot.set_webhook(url='https://partnerbot.herokuapp.com/'+os.getenv('BOT_TOKEN'))
+    @server.route("/")
+    def webhook():
+        app.bot.remove_webhook()
+        app.bot.set_webhook(url='https://partnerbot-f4a9cfd8065c.herokuapp.com/' + os.getenv('BOT_TOKEN'))
+        return "!", 200
 
-    flaskApp.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
 
 if __name__ == '__main__':
